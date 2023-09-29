@@ -36,7 +36,6 @@ def test_ror_update():
 
 
     result = heroku_run_ror_update()
-    did_update_happen(result)
-    test_sql_select()
+    did_update_happen(result) >> test_sql_select()
 
 test_ror_update()
