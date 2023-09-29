@@ -23,7 +23,7 @@ def test_ror_update():
     def test_sql_select():
         pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
         sq = """select * from ins.ror_updates order by finished_update_at desc"""
-        results = pg_hook.get_records()
+        results = pg_hook.get_records(sq)
         print(f"retrieved {len(results)} records")
         for row in results:
             print(row)
