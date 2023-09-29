@@ -12,13 +12,24 @@ import pendulum
 )
 def test_ror_update():
     @task()
-    def heroku_run_ror_update():
+    def heroku_run_ror_update() -> str:
         heroku_api_key = Variable.get("HEROKU_API_KEY")
         heroku_conn = heroku3.from_key(heroku_api_key)
         app = heroku_conn.apps()["openalex-guts"]
-        output = app.run_command("python -m scripts.update_ror_institutions")
+        output, dyno = app.run_command("python -m scripts.update_ror_institutions")
         return output
+    
+    @task()
+    def test_sql_select():
+        pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
+        sq = """select * from ins.ror_updates order by finished_update_at desc"""
+        results = pg_hook.get_records()
+        print(f"retrieved {len(results)} records")
+        for row in results:
+            print(row)
 
     output = heroku_run_ror_update()
+    if 'exiting without doing any updates' in output.lower():
+        test_sql_select()
 
 test_ror_update()
