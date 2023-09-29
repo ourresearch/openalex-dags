@@ -5,3 +5,4 @@ airflow_settings.yaml
 __pycache__/
 astro
 .idea/
+venv
