@@ -29,8 +29,9 @@ def test_ror_update():
             print(row)
 
     result = heroku_run_ror_update()
-    output = result['output']
-    if 'exiting without doing any updates' in output.lower():
-        test_sql_select()
+    # output = result['output']
+    # if 'exiting without doing any updates' in output.lower():
+    #     test_sql_select()
+    test_sql_select()
 
 test_ror_update()
