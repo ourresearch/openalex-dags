@@ -12,12 +12,12 @@ import pendulum
 )
 def test_ror_update():
     @task()
-    def heroku_run_ror_update() -> str:
+    def heroku_run_ror_update():
         heroku_api_key = Variable.get("HEROKU_API_KEY")
         heroku_conn = heroku3.from_key(heroku_api_key)
         app = heroku_conn.apps()["openalex-guts"]
         output, dyno = app.run_command("python -m scripts.update_ror_institutions")
-        return output
+        return {'output': output}
     
     @task()
     def test_sql_select():
@@ -28,7 +28,8 @@ def test_ror_update():
         for row in results:
             print(row)
 
-    output = heroku_run_ror_update()
+    result = heroku_run_ror_update()
+    output = result['output']
     if 'exiting without doing any updates' in output.lower():
         test_sql_select()
 
