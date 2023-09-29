@@ -28,10 +28,15 @@ def test_ror_update():
         for row in results:
             print(row)
 
+    @task.short_circuit
+    def did_update_happen(result):
+        output = result['output']
+        update_was_skipped = 'exiting without doing any updates' in output.lower()
+        return not update_was_skipped
+
+
     result = heroku_run_ror_update()
-    # output = result['output']
-    # if 'exiting without doing any updates' in output.lower():
-    #     test_sql_select()
+    did_update_happen(result)
     test_sql_select()
 
 test_ror_update()
