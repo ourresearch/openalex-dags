@@ -16,7 +16,7 @@ def test_ror_update():
         heroku_api_key = Variable.get("HEROKU_API_KEY")
         heroku_conn = heroku3.from_key(heroku_api_key)
         app = heroku_conn.apps()["openalex-guts"]
-        output = app.run_command("python -m scripts.update_ror_institutions", attach=False)
+        output = app.run_command("python -m scripts.update_ror_institutions")
         return output
 
     output = heroku_run_ror_update()
