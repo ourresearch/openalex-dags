@@ -5,10 +5,10 @@ import heroku3
 from datetime import datetime, timedelta
 
 @dag(
-    schedule=timedelta(days=10),
+    schedule=timedelta(days=1),
     start_date=datetime(2022, 9, 25),
     catchup=False,
-    tags=["test"],
+    tags=["ROR"],
 )
 def update_ror_institutions_dag():
     @task()
