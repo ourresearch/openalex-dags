@@ -86,8 +86,15 @@ def update_ror_institutions_dag():
         update_was_skipped = 'exiting without doing any updates' in output.lower()
         return not update_was_skipped
 
+    @task()
+    def cleanup():
+        pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
+        sq = """vacuum analyze mid.institution_ancestors_mv"""
+        pg_hook.run(sq)
+
 
     result = heroku_run_ror_update()
     did_update_happen(result) >> upsert_into_ror_summary() >> update_existing_rows_in_institution_table() >> insert_new_rows_in_institution_table()
+    cleanup()
 
 update_ror_institutions_dag()
