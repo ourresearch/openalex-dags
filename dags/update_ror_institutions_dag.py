@@ -88,9 +88,16 @@ def update_ror_institutions_dag():
 
     @task()
     def cleanup():
-        pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
-        sq = """vacuum analyze mid.institution_ancestors_mv"""
-        pg_hook.run(sq)
+        try:
+            pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
+            conn = pg_hook.get_conn()
+            # vacuum command needs to be run with autocommit = True
+            conn.autocommit = True
+            with conn.cursor() as cursor:
+                sq = """vacuum analyze mid.institution_ancestors_mv"""
+                cursor.execute(sq)
+        finally:
+            conn.close()
 
 
     result = heroku_run_ror_update()
