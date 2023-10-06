@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
     catchup=False,
     tags=["test"],
 )
-def update_ror_institutions_dag():
+def test_pg_cleanup():
     @task()
     def cleanup():
         pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
@@ -19,4 +19,4 @@ def update_ror_institutions_dag():
 
     cleanup()
 
-update_ror_institutions_dag()
+test_pg_cleanup()
