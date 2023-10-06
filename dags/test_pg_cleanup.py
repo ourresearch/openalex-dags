@@ -12,10 +12,16 @@ from datetime import datetime, timedelta
 def test_pg_cleanup():
     @task()
     def cleanup():
-        pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
-        pg_hook.set_autocommit(True)
-        sq = """vacuum analyze mid.institution_ancestors_mv"""
-        pg_hook.run(sq)
+        try:
+            pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
+            conn = pg_hook.get_conn()
+            conn.autocommit = True
+            with conn.cursor() as cursor
+                sq = """vacuum analyze mid.institution_ancestors_mv"""
+                # pg_hook.run(sq)
+                cursor.execute(sq)
+        finally:
+            conn.close()
 
 
     cleanup()
