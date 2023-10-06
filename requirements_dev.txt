@@ -1,3 +1,4 @@
 -r requirements.txt
 
 apache-airflow-providers-postgres==5.6.1
+black

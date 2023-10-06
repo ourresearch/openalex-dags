@@ -94,7 +94,6 @@ def update_ror_institutions_dag():
 
 
     result = heroku_run_ror_update()
-    did_update_happen(result) >> upsert_into_ror_summary() >> update_existing_rows_in_institution_table() >> insert_new_rows_in_institution_table()
-    cleanup()
+    did_update_happen(result) >> upsert_into_ror_summary() >> update_existing_rows_in_institution_table() >> insert_new_rows_in_institution_table() >> cleanup()
 
 update_ror_institutions_dag()
