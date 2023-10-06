@@ -13,6 +13,7 @@ def test_pg_cleanup():
     @task()
     def cleanup():
         pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
+        pg_hook.set_autocommit(True)
         sq = """vacuum analyze mid.institution_ancestors_mv"""
         pg_hook.run(sq)
 
