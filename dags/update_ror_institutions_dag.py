@@ -34,19 +34,20 @@ def update_ror_institutions_dag():
         pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
         md5_checksum = most_recent_file_obj.get("checksum", "").replace("md5:", "")
         logger.info(f"most recent md5_checksum for ROR data: {md5_checksum}")
-        sq = "select * from ins.ror_updates order by finished_update_at desc limit 1"
-        db_result = pg_hook.run(sq)
+        sq = "select md5_checksum, finished_update_at from ins.ror_updates order by finished_update_at desc limit 1"
+        db_result = pg_hook.get_records(sq)
+        logger.info(db_result)
         if db_result:
             most_recent_openalex_ror_update = db_result[0]
             logger.info(
-                f"The most recent ROR update in OpenAlex was: {most_recent_openalex_ror_update['finished_update_at'] or 'DID NOT COMPLETE'}"
+                f"The most recent ROR update in OpenAlex was: {most_recent_openalex_ror_update[1] or 'DID NOT COMPLETE'}"
             )
             logger.info(
-                f"The most recent ROR update in OpenAlex had md5_checksum: {most_recent_openalex_ror_update['md5_checksum']}"
+                f"The most recent ROR update in OpenAlex had md5_checksum: {most_recent_openalex_ror_update[0]}"
             )
             if (
-                most_recent_openalex_ror_update['md5_checksum'] == md5_checksum
-                and most_recent_openalex_ror_update['finished_update_at'] is not None
+                most_recent_openalex_ror_update[0] == md5_checksum
+                and most_recent_openalex_ror_update[1] is not None
             ):
                 logger.info(
                     f"md5_checksum matches most recent OpenAlex update. This means that ROR data is up to date in OpenAlex. Exiting without doing any updates... (md5_checksum: {md5_checksum})"
