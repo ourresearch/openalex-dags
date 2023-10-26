@@ -2,7 +2,22 @@ from airflow.decorators import task, dag
 from airflow.models import Variable
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 import heroku3
+import requests
 from datetime import datetime, timedelta
+
+import logging
+logger = logging.getLogger(__name__)
+
+def get_most_recent_ror_dump_metadata():
+    # https://ror.readme.io/docs/data-dump#download-ror-data-dumps-programmatically-with-the-zenodo-api
+    url = "https://zenodo.org/api/communities/ror-data/records?q=&sort=newest"
+    r = requests.get(url)
+    if r.status_code >= 400:
+        return None
+    most_recent_hit = r.json()["hits"]["hits"][0]
+    files = most_recent_hit["files"]
+    most_recent_file_obj = files[-1]
+    return most_recent_file_obj
 
 @dag(
     schedule=timedelta(days=1),
@@ -11,6 +26,34 @@ from datetime import datetime, timedelta
     tags=["ROR"],
 )
 def update_ror_institutions_dag():
+    @task.short_circuit
+    def check_previous_updates():
+        most_recent_file_obj = get_most_recent_ror_dump_metadata()
+        if most_recent_file_obj is None:
+            raise RuntimeError("Failed to get ROR data. Exiting without doing any updates...")
+        pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
+        md5_checksum = most_recent_file_obj.get("checksum", "").replace("md5:", "")
+        logger.info(f"most recent md5_checksum for ROR data: {md5_checksum}")
+        sq = "select * from ins.ror_updates order by finished_update_at desc limit 1"
+        db_result = pg_hook.run(sq)
+        if db_result:
+            most_recent_openalex_ror_update = db_result[0]
+            logger.info(
+                f"The most recent ROR update in OpenAlex was: {most_recent_openalex_ror_update['finished_update_at'] or 'DID NOT COMPLETE'}"
+            )
+            logger.info(
+                f"The most recent ROR update in OpenAlex had md5_checksum: {most_recent_openalex_ror_update['md5_checksum']}"
+            )
+            if (
+                most_recent_openalex_ror_update['md5_checksum'] == md5_checksum
+                and most_recent_openalex_ror_update['finished_update_at'] is not None
+            ):
+                logger.info(
+                    f"md5_checksum matches most recent OpenAlex update. This means that ROR data is up to date in OpenAlex. Exiting without doing any updates... (md5_checksum: {md5_checksum})"
+                )
+                return False
+        return True
+
     @task()
     def heroku_run_ror_update():
         heroku_api_key = Variable.get("HEROKU_API_KEY")
@@ -103,7 +146,7 @@ def update_ror_institutions_dag():
             conn.close()
 
 
-    result = heroku_run_ror_update()
+    result = check_previous_updates() >> heroku_run_ror_update()
     did_update_happen(result) >> upsert_into_ror_summary() >> update_existing_rows_in_institution_table() >> insert_new_rows_in_institution_table() >> cleanup()
 
 update_ror_institutions_dag()
