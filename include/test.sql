@@ -1,4 +1,4 @@
-\timing
+-- \timing
 
 select * from mid.affiliation limit 1;
 
