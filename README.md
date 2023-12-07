@@ -41,4 +41,16 @@ You should also be able to access your Postgres Database at 'localhost:5432/post
 Deploy Your Project to Astronomer
 =================================
 
-If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://docs.astronomer.io/cloud/deploy-code/
+To deploy, run:
+
+```sh
+astro deploy cllybcof917645dlzp5onofy90
+```
+
+or, to just update the dags:
+
+```sh
+astro deploy cllybcof917645dlzp5onofy90 --dags
+```
+
+https://docs.astronomer.io/cloud/deploy-code/
