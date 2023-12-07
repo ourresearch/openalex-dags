@@ -16,6 +16,6 @@ logger = logging.getLogger(__name__)
     template_searchpath="/usr/local/airflow/include",
 )
 def test_sql():
-    SQLExecuteQueryOperator(conn_id="OPENALEX_DB", sql="test.sql")
+    SQLExecuteQueryOperator(task_id="execute_query", conn_id="OPENALEX_DB", sql="test.sql")
 
 test_sql()
