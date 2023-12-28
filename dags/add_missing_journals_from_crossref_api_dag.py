@@ -8,7 +8,7 @@ SCRIPT_TO_RUN = "cleanup.scripts.add_missing_journals_from_crossref_api"
 
 
 @dag(
-    schedule=timedelta(days=30),
+    schedule=timedelta(days=7),
     start_date=datetime(2023, 10, 2),
     catchup=False,
 )
