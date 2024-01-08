@@ -1,0 +1,3 @@
+refresh materialized view concurrently mid.citation_percentiles_by_year_mv;
+vacuum analyze mid.citation_percentiles_by_year_mv;
+
