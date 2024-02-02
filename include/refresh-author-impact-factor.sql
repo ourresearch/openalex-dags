@@ -1,0 +1,2 @@
+refresh materialized view concurrently mid.author_impact_factor_mv;
+vacuum analyze mid.author_impact_factor_mv;

@@ -1,0 +1,2 @@
+refresh materialized view concurrently mid.citation_institutions_2yr_mv;
+vacuum analyze mid.citation_institutions_2yr_mv;

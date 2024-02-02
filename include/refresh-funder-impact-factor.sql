@@ -1,0 +1,2 @@
+refresh materialized view concurrently mid.funder_impact_factor_mv;
+vacuum analyze mid.funder_impact_factor_mv;

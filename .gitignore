@@ -6,3 +6,7 @@ __pycache__/
 astro
 .idea/
 venv
+
+include/openalex-maint
+crontab-bak*
+*.ipynb

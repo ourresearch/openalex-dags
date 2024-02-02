@@ -1,0 +1,2 @@
+refresh materialized view concurrently mid.concept_self_and_ancestors_mv;
+vacuum analyze mid.concept_self_and_ancestors_mv;

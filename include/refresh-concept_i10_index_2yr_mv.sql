@@ -1,0 +1,2 @@
+refresh materialized view concurrently mid.concept_i10_index_2yr_mv;
+vacuum analyze mid.concept_i10_index_2yr_mv;

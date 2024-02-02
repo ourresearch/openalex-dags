@@ -1,0 +1,2 @@
+refresh materialized view concurrently mid.funder_i10_index_2yr_mv;
+vacuum analyze mid.funder_i10_index_2yr_mv;

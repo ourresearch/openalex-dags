@@ -1,0 +1,2 @@
+refresh materialized view concurrently mid.institution_h_index_mv;
+vacuum analyze mid.institution_h_index_mv;
