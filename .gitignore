@@ -10,3 +10,10 @@ venv
 include/openalex-maint
 crontab-bak*
 *.ipynb
+
+# vscode editor
+.vscode/**/*
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
