@@ -18,7 +18,7 @@ def update_retraction_watch_dag():
         heroku_api_key = Variable.get("HEROKU_API_KEY")
         heroku_conn = heroku3.from_key(heroku_api_key)
         app = heroku_conn.apps()["openalex-guts"]
-        output, dyno = app.run_command(f"python -m {SCRIPT_TO_RUN}")
+        output, dyno = app.run_command(f"python -m {SCRIPT_TO_RUN}", size="standard-2x")
         return {"output": output}
 
     result = heroku_run_update_retraction_watch()
