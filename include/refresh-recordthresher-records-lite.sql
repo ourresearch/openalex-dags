@@ -1,2 +1,2 @@
 refresh materialized view concurrently mid.recordthresher_records_lite_new_mv;
-vacuum analyze recordthresher_records_lite_new_mv;
+vacuum analyze mid.recordthresher_records_lite_new_mv;
