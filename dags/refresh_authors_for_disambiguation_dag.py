@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 @dag(
     schedule=timedelta(hours=6),
-    start_date=datetime(2024, 3, 18, 22, 0, 0),
+    start_date=datetime(2024, 4, 17, 22, 0, 0),
     catchup=False,
     tags=["maint-migrate"],
     template_searchpath="/usr/local/airflow/include",
