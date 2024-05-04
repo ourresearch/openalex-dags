@@ -125,14 +125,14 @@ where t.author_id = author.author_id and t.last_known_affiliation_id is distinct
 
 
 -- update authorships that still need disambiguation
-refresh materialized view authorships.for_disambiguation_work_authors_mv;
-vacuum analyze authorships.for_disambiguation_work_authors_mv;
-refresh materialized view authorships.for_disambiguation_concepts_mv;
-vacuum analyze authorships.for_disambiguation_concepts_mv;
-refresh materialized view authorships.for_disambiguation_citations_mv;
-vacuum analyze authorships.for_disambiguation_citations_mv;
-refresh materialized view authorships.for_disambiguation_coauthors_mv;
-vacuum analyze authorships.for_disambiguation_coauthors_mv;
-refresh materialized view authorships.for_disambiguation_mv;
-vacuum analyze authorships.for_disambiguation_mv;
+-- refresh materialized view authorships.for_disambiguation_work_authors_mv;
+-- vacuum analyze authorships.for_disambiguation_work_authors_mv;
+-- refresh materialized view authorships.for_disambiguation_concepts_mv;
+-- vacuum analyze authorships.for_disambiguation_concepts_mv;
+-- refresh materialized view authorships.for_disambiguation_citations_mv;
+-- vacuum analyze authorships.for_disambiguation_citations_mv;
+-- refresh materialized view authorships.for_disambiguation_coauthors_mv;
+-- vacuum analyze authorships.for_disambiguation_coauthors_mv;
+-- refresh materialized view authorships.for_disambiguation_mv;
+-- vacuum analyze authorships.for_disambiguation_mv;
 
