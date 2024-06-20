@@ -7,3 +7,4 @@ update queue.publisher_store set started = null where started < now() - interval
 update queue.funder_store set started = null where started < now() - interval '8 hours';
 update queue.run_once_work_add_everything set started = null where started < now() - interval '8 hours';
 update queue.run_once_work_add_most_things set started = null where started < now() - interval '8 hours';
+update queue.work_authors_changed_store set started = null where started < now() - interval '8 hours';
