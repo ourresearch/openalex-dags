@@ -47,7 +47,7 @@ To deploy, run:
 astro deploy cllybcof917645dlzp5onofy90
 ```
 
-or, to just update the dags:
+or, to just update the dags (this won't update any files other than the dag `.py` files):
 
 ```sh
 astro deploy cllybcof917645dlzp5onofy90 --dags

@@ -60,7 +60,7 @@ def update_ror_institutions_dag():
         heroku_api_key = Variable.get("HEROKU_API_KEY")
         heroku_conn = heroku3.from_key(heroku_api_key)
         app = heroku_conn.apps()["openalex-guts"]
-        output, dyno = app.run_command("python -m scripts.update_ror_institutions", size="standard-2x")
+        output, dyno = app.run_command("python -m scripts.update_ror_institutions", size="performance-l")
         update_was_skipped = 'exiting without doing any updates' in output.lower()
         if update_was_skipped and 'failed' in output.lower():
             raise RuntimeError("There was a problem while attempting the ROR update")
