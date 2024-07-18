@@ -19,14 +19,15 @@ def log_dbcounts_dag():
 
     @task
     def get_tables_to_log():
-        result = SQLExecuteQueryOperator(
+        return SQLExecuteQueryOperator(
             task_id="get_tables_to_log",
             sql="SELECT tablename, schema_name FROM logs.dbcounts_tables_to_track WHERE active IS TRUE AND times_per_day = 2;",
         )
-        return {'result': result}
 
     @task
-    def count_query(tablename, schema_name):
+    def count_query(r):
+        tablename = r.tablename
+        schema_name = r.schema_name
         SQLExecuteQueryOperator(
             task_id=f"execute_query_{schema_name}.{tablename}",
             autocommit=True,
@@ -37,10 +38,8 @@ def log_dbcounts_dag():
         )
 
     tablenames_query_result = get_tables_to_log()
-    tablenames = [r.tablename for r in tablenames_query_result['result']]
-    schema_names = [r.schema_name for r in tablenames_query_result['result']]
     # Create, in parallel, one task per result
-    count_query.expand(tablename=tablenames, schema_name=schema_names)
+    count_query.expand(r=tablenames_query_result)
 
 
 log_dbcounts_dag()
