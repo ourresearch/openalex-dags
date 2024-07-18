@@ -30,13 +30,18 @@ def log_dbcounts_dag():
         tablename = r[0]
         schema_name = r[1]
         logger.info(f"{schema_name}.{tablename}")
+        sq = f"""with count_q as (
+	select count(*) as row_count from {schema_name}.{tablename}
+)
+insert into logs.dbcount (query_timestamp, row_count, tablename, schema_name)
+	select now() at time zone 'utc', row_count, '{tablename}', '{schema_name}'
+	from count_q;"""
         SQLExecuteQueryOperator(
             task_id=f"execute_query",
             autocommit=True,
             split_statements=True,
             conn_id="OPENALEX_DB",
-            sql="dbcount-parameterized.sql",
-            params={"tablename": tablename, "schema_name": schema_name},
+            sql=sq,
         )
 
     tablenames_query_result = get_tables_to_log()
