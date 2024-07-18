@@ -36,8 +36,8 @@ def log_dbcounts_dag():
         )
 
     tablenames_query_result = get_tables_to_log()
-    tablenames = [r.tablename for r in tablenames_query_result.output]
-    schema_names = [r.schema_name for r in tablenames_query_result.output]
+    tablenames = [r.tablename for r in tablenames_query_result]
+    schema_names = [r.schema_name for r in tablenames_query_result]
     # Create, in parallel, one task per result
     count_query.expand(tablename=tablenames, schema_name=schema_names)
 
