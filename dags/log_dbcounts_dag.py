@@ -29,6 +29,7 @@ def log_dbcounts_dag():
     def count_query(r):
         tablename = r[0]
         schema_name = r[1]
+        logger.info(f"{schema_name}.{tablename}")
         SQLExecuteQueryOperator(
             task_id=f"execute_query_{schema_name}.{tablename}",
             autocommit=True,
