@@ -31,7 +31,6 @@ def log_dbcounts_dag():
         schema_name = r[1]
         logger.info(f"{schema_name}.{tablename}")
         SQLExecuteQueryOperator(
-            task_id=f"execute_query_{schema_name}.{tablename}",
             autocommit=True,
             split_statements=True,
             conn_id="OPENALEX_DB",
