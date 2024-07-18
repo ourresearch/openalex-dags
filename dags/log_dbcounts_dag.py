@@ -1,5 +1,6 @@
 from airflow.decorators import task, dag
 from airflow.models import Variable
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from datetime import datetime, timedelta
 
@@ -19,15 +20,15 @@ def log_dbcounts_dag():
 
     @task
     def get_tables_to_log():
-        return SQLExecuteQueryOperator(
-            task_id="get_tables_to_log",
-            sql="SELECT tablename, schema_name FROM logs.dbcounts_tables_to_track WHERE active IS TRUE AND times_per_day = 2;",
-        )
+        pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
+        sq = """SELECT tablename, schema_name FROM logs.dbcounts_tables_to_track WHERE active IS TRUE AND times_per_day = 2;"""
+        db_result = pg_hook.get_records(sq)
+        return db_result
 
     @task
     def count_query(r):
-        tablename = r.tablename
-        schema_name = r.schema_name
+        tablename = r[0]
+        schema_name = r[1]
         SQLExecuteQueryOperator(
             task_id=f"execute_query_{schema_name}.{tablename}",
             autocommit=True,
