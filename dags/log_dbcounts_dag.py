@@ -19,7 +19,7 @@ def log_dbcounts_dag():
 
     @task
     def get_tables_to_log():
-        SQLExecuteQueryOperator(
+        return SQLExecuteQueryOperator(
             task_id="get_tables_to_log",
             sql="SELECT tablename, schema_name FROM logs.dbcounts_tables_to_track WHERE active IS TRUE AND times_per_day = 2;",
         )
