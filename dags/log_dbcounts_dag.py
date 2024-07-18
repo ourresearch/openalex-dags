@@ -36,13 +36,8 @@ def log_dbcounts_dag():
 insert into logs.dbcount (query_timestamp, row_count, tablename, schema_name)
 	select now() at time zone 'utc', row_count, '{tablename}', '{schema_name}'
 	from count_q;"""
-        SQLExecuteQueryOperator(
-            task_id=f"execute_query",
-            autocommit=True,
-            split_statements=True,
-            conn_id="OPENALEX_DB",
-            sql=sq,
-        )
+        pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
+        pg_hook.run(sq)
 
     tablenames_query_result = get_tables_to_log()
     # Create, in parallel, one task per result
