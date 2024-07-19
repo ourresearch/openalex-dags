@@ -21,7 +21,7 @@ def log_dbcounts_dag():
     @task
     def get_tables_to_log():
         pg_hook = PostgresHook(postgres_conn_id="OPENALEX_DB")
-        sq = """SELECT tablename, schema_name FROM logs.dbcounts_tables_to_track WHERE active IS TRUE AND times_per_day = 2;"""
+        sq = """SELECT tablename, schema_name FROM logs.dbcount_tables_to_track WHERE active IS TRUE AND times_per_day = 2;"""
         db_result = pg_hook.get_records(sq)
         return db_result
 
